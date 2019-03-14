@@ -148,7 +148,7 @@ double power(double base, int exponent){
 
 int main() {
     //first ask for number of points
-    printf("How many points?");
+    printf("How many points will the polynomial be modeled around? ");
     int N;
     scanf("%d", &N);
     
@@ -161,7 +161,11 @@ int main() {
         double x;
         double y;
         
-        scanf("%lf %lf", &x, &y);
+        printf("x-coordinate %d: ", i);
+        scanf("%lf", &x);
+        
+        printf("y-coordinate %d: ", i);
+        scanf("%lf", &y);
         
         xCoordinates.push_back(x);
         yCoordinates.push_back(y);
@@ -169,14 +173,10 @@ int main() {
     }
     
     //ask for degree of polynomial
-    printf("Enter degree of polynomial: ");
+    printf("What is the degree of the polynomial-of-best-fit? ");
     int deg;
     scanf("%d", &deg);
     
-    /*
-    for(auto x: xCoordinates){
-        cout << x <<"\n";
-    }*/
     
     //create A
     vector<vector<double> > A (xCoordinates.size());
@@ -196,13 +196,6 @@ int main() {
     //Find A^TA
     vector<vector<double> > matrixLHS = multiply(AT,A);
     
-    /*for(auto row: matrixLHS){
-        for(auto element: row){
-            cout << element << " ";
-        }
-        cout << "\n";
-    }*/
-    
     
     //create y
     vector<vector<double> > Y(yCoordinates.size());
@@ -221,20 +214,29 @@ int main() {
         Aug[i].push_back(matrixRHS[i][0]);
     }
     
-    /*for(auto row: Aug){
-        for(auto element: row){
-            cout << element << " ";
-        }
-        cout << "\n";
-    }*/
-    
     
     //Solve A^TAx=A^Ty via Gaussian Elimination
     vector<double> X = gaussianElim(Aug,deg+1);
     
-    for(auto x: X){
-        cout << x << " ";
+    //note that X begins with constant
+    
+    for(int i = X.size()-1; i>=2 ;i--){
+        
+        if(X[i-1]>=0){
+            cout << X[i] << "x^" << i << "+";
+        }
+        else{
+            cout << X[i] << "x^" << i;
+        }
     }
     
+    if(X[0]>=0){
+        cout << X[1] << "x+";
+    }
+    else{
+        cout << X[1] << "x";
+    }
+
+    cout << X[0];
 }
 
